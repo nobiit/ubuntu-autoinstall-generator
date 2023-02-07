@@ -10,7 +10,8 @@ function cleanup() {
 }
 
 trap cleanup SIGINT SIGTERM ERR EXIT
-script_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)
+self_path=$([ -z "${BASH_SOURCE[@]}" ] && echo . || echo ${BASH_SOURCE[0]})
+script_dir=$(cd "$(dirname "${self_path}")" &>/dev/null && pwd -P)
 [[ ! -x "$(command -v date)" ]] && echo "💥 date command not found." && exit 1
 today=$(date +"%Y-%m-%d")
 
@@ -27,7 +28,7 @@ function die() {
 
 usage() {
         cat <<EOF
-Usage: $(basename "${BASH_SOURCE[0]}") [-h] [-v] [-a] [-e] [-u user-data-file] [-m meta-data-file] [-k] [-c] [-r] [-s source-iso-file] [-d destination-iso-file]
+Usage: $(basename "${self_path}") [-h] [-v] [-a] [-e] [-u user-data-file] [-m meta-data-file] [-k] [-c] [-r] [-s source-iso-file] [-d destination-iso-file]
 
 💁 This script will create fully-automated Ubuntu 20.04 Focal Fossa installation media.
 
